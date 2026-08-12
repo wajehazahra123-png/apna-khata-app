@@ -8,140 +8,181 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --brick:#7A3B2E;
-    --brick-deep:#5A2A20;
-    --cream:#FBF3E7;
-    --paper:#FFFCF6;
-    --gold:#C89B3C;
-    --gold-deep:#A87F2A;
-    --ink:#2B211C;
-    --green:#3E7A4B;
-    --red:#B5423A;
-    --line: rgba(122,59,46,0.18);
-    --shadow: 0 10px 28px rgba(122,59,46,0.14);
+    --brick:#7A3B2E; --brick-deep:#5A2A20; --cream:#FBF3E7; --paper:#FFFCF6;
+    --gold:#C89B3C; --gold-deep:#A87F2A; --ink:#2B211C; --green:#3E7A4B; --red:#B5423A;
+    --line: rgba(122,59,46,0.18); --shadow: 0 10px 28px rgba(122,59,46,0.14);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(122,59,46,0.15);touch-action:manipulation;}
   html,body{margin:0;width:100%;overflow-x:hidden;}
   body{background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;}
-  button,.ccard,.day-check,.chip,a.btn{cursor:pointer;}
-  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
   .mono{font-family:'JetBrains Mono',monospace;}
+  .hidden{display:none !important;}
 
-  header{
-    position:sticky;top:0;z-index:40;background:var(--brick);color:var(--paper);
-    padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.15);
-  }
+  /* Login screen */
+  #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .login-box{background:var(--paper);border-radius:16px;max-width:380px;width:100%;padding:28px;box-shadow:var(--shadow);}
+  .login-box h1{color:var(--brick-deep);font-size:24px;margin:0 0 4px;text-align:center;}
+  .login-box p.sub{text-align:center;color:#8a7c72;font-size:13px;margin:0 0 20px;}
+  .tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--cream);border-radius:9px;padding:4px;}
+  .tab{flex:1;text-align:center;padding:8px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--brick-deep);}
+  .tab.active{background:var(--brick);color:var(--paper);}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--brick-deep);margin-bottom:5px;}
+  .field input{width:100%;padding:10px 11px;border-radius:8px;border:1.5px solid var(--line);font-size:14px;background:var(--cream);}
+  .error-text{color:var(--red);font-size:12px;margin:-4px 0 10px;display:none;}
+  .info-text{color:#8a7c72;font-size:11.5px;margin:0 0 12px;line-height:1.5;}
+
+  header{position:sticky;top:0;z-index:40;background:var(--brick);color:var(--paper);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);}
   .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:38px;height:38px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:var(--brick-deep);font-size:19px;}
-  #bizName{font-family:'Fraunces',serif;font-weight:700;font-size:20px;background:transparent;border:none;color:var(--paper);outline:none;border-bottom:1px dashed transparent;}
-  #bizName:hover,#bizName:focus{border-bottom:1px dashed rgba(255,255,255,0.5);}
-  .brand-tag{font-size:11px;opacity:0.75;letter-spacing:1px;}
-  .btn{border:none;border-radius:9px;padding:9px 15px;font-weight:600;cursor:pointer;font-size:13.5px;font-family:'Inter',sans-serif;}
+  .brand-mark{width:36px;height:36px;border-radius:9px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:var(--brick-deep);font-size:18px;flex-shrink:0;}
+  #bizName{font-family:'Fraunces',serif;font-weight:700;font-size:18px;background:transparent;border:none;color:var(--paper);outline:none;max-width:160px;}
+  .brand-tag{font-size:10.5px;opacity:0.75;}
+  .btn{border:none;border-radius:9px;padding:9px 14px;font-weight:600;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;min-height:40px;}
   .btn-gold{background:var(--gold);color:var(--brick-deep);}
-  .btn-gold:hover{background:var(--gold-deep);}
   .btn-outline{background:transparent;border:1.5px solid rgba(255,255,255,0.5);color:var(--paper);}
-  .btn-outline:hover{background:rgba(255,255,255,0.12);}
   .btn-ink{background:var(--brick-deep);color:var(--paper);}
-  .btn-ink:hover{background:#441f18;}
   .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--brick-deep);}
+  .icon-btn{width:40px;height:40px;border-radius:9px;background:rgba(255,255,255,0.12);border:none;color:var(--paper);font-size:17px;cursor:pointer;}
+  .user-pill{background:rgba(255,255,255,0.14);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .role-badge{background:var(--gold);color:var(--brick-deep);border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;}
 
-  main{max-width:1100px;margin:0 auto;padding:26px 20px 80px;}
-
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
-  .toolbar select, .toolbar input[type="text"]{padding:8px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--cream);font-size:13.5px;font-family:'Inter',sans-serif;}
+  main{max-width:1100px;margin:0 auto;padding:22px 16px 80px;}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);}
+  .toolbar select{padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--cream);font-size:13.5px;}
   .toolbar .spacer{flex:1;}
-  .today-pill{background:var(--gold);color:var(--brick-deep);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;}
+  .search-row{display:flex;gap:6px;flex:1;min-width:180px;}
+  .search-row input{flex:1;padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--cream);font-size:13.5px;}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
-  .ccard{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s ease;}
-  .ccard:hover{transform:translateY(-2px);}
-  .ccard-top{display:flex;justify-content:space-between;align-items:flex-start;}
-  .ccard-name{font-weight:700;font-size:16px;color:var(--brick-deep);}
-  .ccard-area{font-size:11px;color:var(--gold-deep);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
-  .ccard-phone{font-size:12.5px;color:#8a7c72;margin-top:6px;}
-  .ccard-days{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
-  .day-tag{font-size:10px;background:var(--cream);border:1px solid var(--line);padding:2px 6px;border-radius:5px;color:var(--brick-deep);font-weight:600;}
-  .ccard-balance{margin-top:12px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;}
-  .bal-due{color:var(--red);}
-  .bal-clear{color:var(--green);}
-  .empty-msg{text-align:center;color:#8a7c72;padding:60px 10px;font-size:14px;grid-column:1/-1;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+  .ccard{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow);cursor:pointer;}
+  .ccard-name{font-weight:700;font-size:15.5px;color:var(--brick-deep);}
+  .ccard-area{font-size:11px;color:var(--gold-deep);font-weight:700;text-transform:uppercase;margin-top:2px;}
+  .ccard-phone{font-size:12px;color:#8a7c72;margin-top:5px;}
+  .day-tag{display:inline-block;font-size:10px;background:var(--cream);border:1px solid var(--line);padding:2px 7px;border-radius:5px;color:var(--brick-deep);font-weight:600;margin-top:7px;}
+  .ccard-balance{margin-top:10px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15.5px;}
+  .bal-due{color:var(--red);} .bal-clear{color:var(--green);}
+  .empty-msg{text-align:center;color:#8a7c72;padding:50px 10px;font-size:14px;grid-column:1/-1;}
 
-  /* Modals */
-  .modal-overlay{position:fixed;inset:0;background:rgba(43,33,28,0.45);z-index:70;display:none;align-items:center;justify-content:center;padding:16px;}
+  .modal-overlay{position:fixed;inset:0;background:rgba(43,33,28,0.45);z-index:70;display:none;align-items:center;justify-content:center;padding:14px;}
   .modal-overlay.show{display:flex;}
-  .modal{background:var(--paper);border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
-  @media (max-width:480px){
-    header{padding:12px 14px;}
-    #bizName{font-size:16px;max-width:150px;}
-    main{padding:16px 12px 70px;}
-    .toolbar{flex-direction:column;align-items:stretch;padding:12px;}
-    .toolbar select,.toolbar input[type="text"]{width:100%;}
-    .today-pill{align-self:flex-start;}
-    .modal{padding:16px;border-radius:12px;}
-    .tx-row{flex-direction:column;gap:0;}
-    .modal-actions{flex-direction:column;}
-  }
-  .modal h2{margin:0 0 4px;color:var(--brick-deep);font-size:21px;}
-  .modal p.sub{color:#8a7c72;font-size:13px;margin:0 0 16px;}
-  .field{margin-bottom:13px;}
-  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--brick-deep);margin-bottom:5px;}
-  .field input, .field select{width:100%;padding:9px 11px;border-radius:8px;border:1.5px solid var(--line);font-size:14px;background:var(--cream);font-family:'Inter',sans-serif;}
-  .days-check{display:flex;flex-wrap:wrap;gap:6px;}
-  .day-check{border:1.5px solid var(--line);border-radius:7px;padding:6px 10px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--brick-deep);}
-  .day-check.active{background:var(--brick);color:var(--paper);border-color:var(--brick);}
-  .modal-actions{display:flex;gap:10px;margin-top:16px;}
-  .modal-actions .btn{flex:1;}
-  .error-text{color:var(--red);font-size:12px;margin-top:-6px;margin-bottom:10px;display:none;}
+  .modal{background:var(--paper);border-radius:16px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+  .modal h2{margin:0 0 4px;color:var(--brick-deep);font-size:20px;}
+  .modal p.sub{color:#8a7c72;font-size:12.5px;margin:0 0 14px;}
+  .day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+  .modal-actions{display:flex;gap:10px;margin-top:14px;position:sticky;bottom:0;background:var(--paper);padding:10px 0 2px;z-index:5;}
+  .modal-actions .btn{flex:1;min-height:44px;}
 
-  /* Ledger modal */
-  .ledger-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
-  .ledger-bal{text-align:right;}
-  .ledger-bal .amt{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:22px;}
-  .ledger-bal .lbl{font-size:11px;color:#8a7c72;}
-  .tx-form{background:var(--cream);border-radius:10px;padding:14px;margin-bottom:16px;border:1px dashed var(--line);}
-  .tx-row{display:flex;gap:10px;}
+  .ledger-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px;}
+  .ledger-bal .amt{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;}
+  .ledger-bal .lbl{font-size:11px;color:#8a7c72;text-align:right;}
+  .tx-form{background:var(--cream);border-radius:10px;padding:12px;margin-bottom:14px;border:1px dashed var(--line);}
+  .tx-row{display:flex;gap:8px;}
   .tx-row .field{flex:1;}
-  .tx-history{max-height:220px;overflow-y:auto;}
-  .tx-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dotted var(--line);font-size:13px;}
-  .tx-item .d{color:#8a7c72;font-size:11px;}
-  .tx-item .amts{text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+  .tx-history{max-height:190px;overflow-y:auto;}
+  .tx-item{padding:9px 0;border-bottom:1px dotted var(--line);font-size:12.5px;}
+  .tx-item-top{display:flex;justify-content:space-between;}
+  .tx-item .d{color:#8a7c72;font-size:10.5px;}
+  .tx-amts{text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;}
 
-  /* Receipt */
-  .receipt{background:var(--paper);background-image: radial-gradient(circle, transparent 8px, var(--paper) 8.5px);background-size:18px 100%;padding:22px 20px;}
-  .receipt-top{text-align:center;border-bottom:2px dashed var(--line);padding-bottom:12px;margin-bottom:12px;}
-  .receipt-top .biz{font-family:'Fraunces',serif;font-weight:700;font-size:19px;color:var(--brick-deep);}
-  .receipt-meta{font-size:12px;color:#8a7c72;margin-top:4px;}
-  .receipt-row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px dotted var(--line);}
-  .receipt-row.total{font-weight:700;font-size:16px;color:var(--brick-deep);border-top:2px dashed var(--line);border-bottom:none;margin-top:6px;padding-top:10px;}
-  .receipt-foot{text-align:center;margin-top:16px;font-size:11.5px;color:#a99a8e;}
+  .receipt{background:var(--paper);background-image: radial-gradient(circle, transparent 8px, var(--paper) 8.5px);background-size:18px 100%;padding:20px 18px;}
+  .receipt-top{text-align:center;border-bottom:2px dashed var(--line);padding-bottom:10px;margin-bottom:10px;}
+  .receipt-top .biz{font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:var(--brick-deep);}
+  .receipt-meta{font-size:11.5px;color:#8a7c72;margin-top:3px;}
+  .receipt-row{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;border-bottom:1px dotted var(--line);}
+  .receipt-row.total{font-weight:700;font-size:15.5px;color:var(--brick-deep);border-top:2px dashed var(--line);border-bottom:none;margin-top:6px;padding-top:10px;}
+  .receipt-foot{text-align:center;margin-top:14px;font-size:11px;color:#a99a8e;}
 
-  .sms-preview{background:var(--cream);border:1px dashed var(--line);border-radius:10px;padding:14px;font-size:13.5px;line-height:1.7;white-space:pre-wrap;margin-bottom:14px;}
-  .note-box{background:#FDF3E0;border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:12px;color:#6b4e12;margin-bottom:12px;}
+  .note-box{background:#FDF3E0;border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:11.5px;color:#6b4e12;margin-bottom:12px;line-height:1.5;}
+  .sms-row{display:flex;gap:8px;margin-top:8px;}
+  .sms-row a.btn{text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;}
 
-  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--brick-deep);color:var(--paper);padding:11px 18px;border-radius:9px;font-size:13.5px;font-weight:600;z-index:100;box-shadow:0 10px 26px rgba(0,0,0,0.25);opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .route-tabs{display:flex;overflow-x:auto;gap:6px;margin-bottom:14px;padding-bottom:4px;}
+  .route-tab{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);font-weight:600;font-size:13px;cursor:pointer;color:var(--brick-deep);}
+  .route-tab.active{background:var(--brick);color:var(--paper);border-color:var(--brick);}
+  .route-area-title{font-size:12.5px;color:var(--gold-deep);text-transform:uppercase;font-weight:700;margin:14px 0 6px;}
+
+  .sched-table{width:100%;border-collapse:collapse;}
+  .sched-table td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  .sched-table td.day-col{font-weight:700;color:var(--brick-deep);font-size:13.5px;width:85px;}
+  .sched-table td.area-col{padding-left:8px;}
+  .sched-table td.area-col input{width:100%;padding:8px 10px;border-radius:8px;border:1.5px solid var(--line);font-size:13.5px;background:var(--cream);}
+
+  .worker-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dotted var(--line);}
+  .worker-info{font-size:13px;}
+  .worker-info .n{font-weight:700;color:var(--brick-deep);}
+  .worker-info .e{color:#8a7c72;font-size:11.5px;}
+  .status-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;}
+  .status-active{background:#E3F1E5;color:var(--green);}
+  .status-disabled{background:#F6E3E1;color:var(--red);}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--brick-deep);color:var(--paper);padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;z-index:100;box-shadow:0 10px 26px rgba(0,0,0,0.25);opacity:0;pointer-events:none;transition:opacity .25s ease;max-width:90vw;text-align:center;}
   .toast.show{opacity:1;}
+  .spinner{border:3px solid var(--line);border-top:3px solid var(--brick);border-radius:50%;width:24px;height:24px;animation:spin 0.8s linear infinite;margin:20px auto;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 
-  @media print{
-    body *{visibility:hidden;}
-    #printArea, #printArea *{visibility:visible;}
-    #printArea{position:absolute;top:0;left:0;width:100%;}
+  @media print{ body *{visibility:hidden;} #printArea, #printArea *{visibility:visible;} #printArea{position:absolute;top:0;left:0;width:100%;} }
+  @media (max-width:480px){
+    header{padding:10px 12px;} #bizName{font-size:15px;max-width:110px;}
+    main{padding:14px 10px 70px;}
+    .toolbar{flex-direction:column;align-items:stretch;}
+    .toolbar select{width:100%;}
+    .modal{padding:16px;max-height:85vh;}
+    .tx-row{flex-direction:column;gap:0;}
+    .sms-row{flex-direction:column;}
   }
 </style>
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>Apna Khata Book</h1>
+    <p class="sub">Login kar ke jari rakhein</p>
+    <div class="tabs" id="authTabs">
+      <div class="tab active" data-t="login" onclick="switchAuthTab('login')">Login</div>
+      <div class="tab" data-t="owner" id="ownerSignupTab" onclick="switchAuthTab('owner')">Owner Account Banayein</div>
+    </div>
+
+    <div id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+      <div class="error-text" id="loginError"></div>
+      <button class="btn btn-gold" style="width:100%;" onclick="doLogin()">Login</button>
+    </div>
+
+    <div id="ownerSignupForm" class="hidden">
+      <p class="info-text">Ye sirf ek dafa hota hai — jo pehla account banega, wo "Owner" hoga aur poori app control karega.</p>
+      <div class="field"><label>Aapka Naam</label><input type="text" id="ownerName" placeholder="e.g. Ahmed"></div>
+      <div class="field"><label>Email</label><input type="email" id="ownerEmail" placeholder="you@example.com"></div>
+      <div class="field"><label>Password (kam az kam 6 characters)</label><input type="password" id="ownerPassword" placeholder="••••••••"></div>
+      <div class="error-text" id="ownerError"></div>
+      <button class="btn btn-gold" style="width:100%;" onclick="doOwnerSignup()">Owner Account Banayein</button>
+    </div>
+    <div class="spinner hidden" id="loginSpinner"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appRoot" class="hidden">
 <header>
   <div class="brand">
     <div class="brand-mark">K</div>
     <div>
       <input id="bizName" value="Apna Khata Book" />
-      <div class="brand-tag">Customer Ledger &amp; Receipt System</div>
+      <div class="brand-tag">Customer Ledger System</div>
     </div>
   </div>
-  <div style="display:flex;gap:10px;">
-    <button class="btn btn-outline" onclick="openTodayRoute()">Aaj Ka Route</button>
-    <button class="btn btn-gold" onclick="openAddCustomer()">+ Naya Customer</button>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <div class="user-pill">👤 <span id="curUserName"></span> <span class="role-badge" id="curUserRole"></span></div>
+    <button class="icon-btn owner-only hidden" onclick="openSettings()" title="Settings">⚙️</button>
+    <button class="btn btn-outline owner-only hidden" onclick="openSchedule()">Din ka Area</button>
+    <button class="btn btn-outline owner-only hidden" onclick="openWorkers()">Workers</button>
+    <button class="btn btn-outline owner-only hidden" onclick="openActivity()">Activity</button>
+    <button class="btn btn-outline" onclick="openRoutes()">Routes</button>
+    <button class="btn btn-gold" onclick="openAddCustomer()">+ Customer</button>
+    <button class="icon-btn" onclick="doLogout()" title="Logout">🚪</button>
   </div>
 </header>
 
@@ -149,36 +190,88 @@
   <div class="toolbar">
     <select id="filterArea" onchange="renderCustomers()"></select>
     <select id="filterDay" onchange="renderCustomers()">
-      <option value="All">Sab Din</option>
+      <option value="All">Din</option>
       <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
       <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
     </select>
-    <input type="text" id="searchBox" placeholder="Naam se search karein..." oninput="renderCustomers()">
+    <div class="search-row">
+      <input type="text" id="searchBox" placeholder="Naam se search karein...">
+      <button class="btn btn-ink" onclick="renderCustomers()" style="flex-shrink:0;">OK</button>
+    </div>
     <div class="spacer"></div>
-    <div class="today-pill" id="todayPill"></div>
   </div>
-
-  <div class="grid" id="customerGrid"></div>
+  <div class="grid" id="customerGrid"><div class="spinner"></div></div>
 </main>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsOverlay">
+  <div class="modal">
+    <h2>Settings</h2>
+    <p class="sub">Ye number har payment ki copy SMS ke zariye receive karega.</p>
+    <div class="field"><label>Dukan / Company ka Naam</label><input type="text" id="setBizName"></div>
+    <div class="field"><label>Owner ka Mobile Number</label><input type="text" id="setOwnerPhone" placeholder="+923001234567"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSettings()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveSettings()">Save Karein</button>
+    </div>
+  </div>
+</div>
+
+<!-- Day-Area Schedule Modal -->
+<div class="modal-overlay" id="scheduleOverlay">
+  <div class="modal">
+    <h2>Din ka Area Schedule</h2>
+    <p class="sub">Har din ke saamne likhein us din kaunse Area(s) mein jana hai (comma "," se alag karein).</p>
+    <div id="scheduleFields"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSchedule()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveSchedule()">Save Karein</button>
+    </div>
+  </div>
+</div>
+
+<!-- Workers Modal -->
+<div class="modal-overlay" id="workersOverlay">
+  <div class="modal">
+    <h2>Workers Manage Karein</h2>
+    <p class="sub">Naya worker add karein — usko login (email/password) mil jayega.</p>
+    <div class="field"><label>Worker ka Naam</label><input type="text" id="wkName"></div>
+    <div class="field"><label>Email</label><input type="email" id="wkEmail"></div>
+    <div class="field"><label>Password (kam az kam 6 characters)</label><input type="text" id="wkPassword"></div>
+    <div class="error-text" id="wkError"></div>
+    <button class="btn btn-gold" style="width:100%;margin-bottom:16px;" onclick="addWorker()">Worker Add Karein</button>
+    <h3 style="font-size:14px;color:var(--brick-deep);margin:0 0 6px;">Maujooda Workers</h3>
+    <div id="workersList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ink" style="width:100%;" onclick="closeWorkers()">Band Karein</button>
+    </div>
+  </div>
+</div>
+
+<!-- Activity Log Modal -->
+<div class="modal-overlay" id="activityOverlay">
+  <div class="modal">
+    <h2>Activity Log</h2>
+    <p class="sub">Sab entries, kis worker ne kiin, sab se nayi upar.</p>
+    <select id="activityFilter" onchange="renderActivity()" style="width:100%;padding:9px;border-radius:8px;border:1.5px solid var(--line);background:var(--cream);margin-bottom:12px;">
+      <option value="All">Sab Workers</option>
+    </select>
+    <div id="activityList" class="tx-history" style="max-height:400px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ink" style="width:100%;" onclick="closeActivity()">Band Karein</button>
+    </div>
+  </div>
+</div>
 
 <!-- Add Customer Modal -->
 <div class="modal-overlay" id="addCustOverlay">
   <div class="modal">
     <h2>Naya Customer Add Karein</h2>
-    <p class="sub">Customer ki details darj karein.</p>
     <div class="field"><label>Naam</label><input type="text" id="ncName" placeholder="e.g. Rashid Ali"></div>
-    <div class="field"><label>Mobile Number</label><input type="text" id="ncPhone" placeholder="+923001234567"></div>
+    <div class="field"><label>Mobile Number (Customer ka)</label><input type="text" id="ncPhone" placeholder="+923001234567"></div>
     <div class="field"><label>Area / Mohalla</label><input type="text" id="ncArea" placeholder="e.g. Model Town" list="areaList"><datalist id="areaList"></datalist></div>
-    <div class="field">
-      <label>Delivery Din (jitne chahein select karein)</label>
-      <div class="days-check" id="ncDays">
-        <div class="day-check" data-d="Monday">Mon</div><div class="day-check" data-d="Tuesday">Tue</div>
-        <div class="day-check" data-d="Wednesday">Wed</div><div class="day-check" data-d="Thursday">Thu</div>
-        <div class="day-check" data-d="Friday">Fri</div><div class="day-check" data-d="Saturday">Sat</div>
-        <div class="day-check" data-d="Sunday">Sun</div>
-      </div>
-    </div>
-    <div class="error-text" id="ncError">Naam, phone aur area zaroor bharein, kam az kam 1 din select karein.</div>
+    <div class="error-text" id="ncError">Naam, phone aur area zaroor bharein.</div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeAddCustomer()">Cancel</button>
       <button class="btn btn-gold" onclick="submitCustomer()">Add Karein</button>
@@ -188,33 +281,31 @@
 
 <!-- Ledger Modal -->
 <div class="modal-overlay" id="ledgerOverlay">
-  <div class="modal" style="max-width:520px;">
+  <div class="modal">
     <div class="ledger-head">
       <div>
-        <h2 id="lgName" style="margin-bottom:2px;"></h2>
-        <div style="font-size:12.5px;color:#8a7c72;" id="lgSub"></div>
+        <h2 id="lgName" style="margin-bottom:2px;font-size:19px;"></h2>
+        <div style="font-size:12px;color:#8a7c72;" id="lgSub"></div>
       </div>
       <div class="ledger-bal">
         <div class="lbl">Baaki (Remaining)</div>
         <div class="amt" id="lgBalance">Rs. 0</div>
       </div>
     </div>
-
     <div class="tx-form">
       <div class="tx-row">
-        <div class="field"><label>Saman Diya (Rs.)</label><input type="number" id="txGoods" placeholder="0"></div>
-        <div class="field"><label>Payment Wasool (Rs.)</label><input type="number" id="txPaid" placeholder="0"></div>
+        <div class="field"><label>Saman (KG)</label><input type="number" step="0.1" id="txKg" placeholder="0"></div>
+        <div class="field"><label>Bill Amount (Rs.)</label><input type="number" id="txGoods" placeholder="0"></div>
       </div>
-      <div class="field"><label>Tafseel (Item / Note) — optional</label><input type="text" id="txNote" placeholder="e.g. 2kg Aata, 1 Ghee"></div>
+      <div class="field"><label>Payment Wasool (Rs.)</label><input type="number" id="txPaid" placeholder="0"></div>
+      <div class="field"><label>Tafseel — optional</label><input type="text" id="txNote" placeholder="e.g. Aata, Chawal"></div>
       <button class="btn btn-ink" style="width:100%;" onclick="addTransaction()">Entry Add Karein</button>
     </div>
-
-    <h3 style="font-size:14px;color:var(--brick-deep);margin:0 0 8px;">Pichli Entries</h3>
+    <h3 style="font-size:13.5px;color:var(--brick-deep);margin:0 0 8px;">Pichli Entries</h3>
     <div class="tx-history" id="txHistory"></div>
-
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeLedger()">Band Karein</button>
-      <button class="btn btn-outline" style="background:var(--brick);color:var(--paper);border-color:var(--brick);" onclick="deleteCustomerConfirm()">Customer Delete</button>
+      <button class="btn btn-outline owner-only hidden" style="background:var(--brick);color:var(--paper);border-color:var(--brick);" onclick="deleteCustomerConfirm()">Delete</button>
     </div>
   </div>
 </div>
@@ -223,312 +314,492 @@
 <div class="modal-overlay" id="receiptOverlay">
   <div class="modal">
     <div id="printArea"><div class="receipt" id="receiptContent"></div></div>
-    <div class="note-box">SMS bhejnay ke liye neeche button dabayein — mobile par yeh seedha aapka SMS app khol dega, message pehle se likha hoga, sirf "Send" dabana hoga.</div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeReceipt()">Band Karein</button>
-      <button class="btn btn-ink" onclick="window.print()">Print</button>
+    <div class="note-box">Neeche do buttons hain — pehla customer ko SMS bhejta hai, dusra Owner ko. Tap karne se SMS app khulega, bas Send dabana hoga.</div>
+    <div class="sms-row">
+      <a class="btn btn-gold" id="smsCustLink" href="#">📩 Customer ko SMS</a>
+      <a class="btn btn-ink" id="smsOwnerLink" href="#">📩 Owner ko SMS</a>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-outline" style="background:var(--cream);color:var(--brick-deep);border-color:var(--line);" onclick="copySms()">Message Copy Karein</button>
-      <a class="btn btn-gold" style="text-align:center;text-decoration:none;display:block;" id="smsLink" href="#">SMS Bhejein</a>
+      <button class="btn btn-ghost" onclick="closeReceipt()">Band Karein</button>
+      <button class="btn btn-outline" style="background:var(--cream);color:var(--brick-deep);border-color:var(--line);" onclick="window.print()">Print</button>
     </div>
   </div>
 </div>
 
-<!-- Today Route Modal -->
+<!-- Routes Modal -->
 <div class="modal-overlay" id="routeOverlay">
   <div class="modal">
-    <h2 id="routeTitle">Aaj Ka Route</h2>
-    <p class="sub">Area ke hisaab se group kiye gaye aaj ke customers.</p>
+    <h2>7 Din Ka Route Schedule</h2>
+    <div class="route-tabs" id="routeTabs"></div>
     <div id="routeContent"></div>
     <div class="modal-actions">
-      <button class="btn btn-ink" style="width:100%;" onclick="closeTodayRoute()">Band Karein</button>
+      <button class="btn btn-ink" style="width:100%;" onclick="closeRoutes()">Band Karein</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script>
-const WEEKDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc,
+  updateDoc, deleteDoc, query, where, orderBy, onSnapshot, serverTimestamp, limit
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7EB8bkwH8SjhbEz17csIPQL5-__ySSy8",
+  authDomain: "apna-khata-book-66d05.firebaseapp.com",
+  projectId: "apna-khata-book-66d05",
+  storageBucket: "apna-khata-book-66d05.firebasestorage.app",
+  messagingSenderId: "1097927577295",
+  appId: "1:1097927577295:web:b32d5b1aac642e89afb1ba",
+  measurementId: "G-BETS64HF8P"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const WEEKDAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 let customers = [];
 let transactions = {}; // customerId -> [tx]
+let allTx = []; // flat list for activity log
+let settings = {bizName:'Apna Khata Book', ownerPhone:''};
+let daySchedule = {Monday:[],Tuesday:[],Wednesday:[],Thursday:[],Friday:[],Saturday:[],Sunday:[]};
+let workers = [];
 let currentCustomerId = null;
-let selectedDaysTemp = [];
+let activeRouteTab = 'Monday';
+let currentUser = null; // {uid, name, role, email}
 
-// Never let a slow/stuck storage call freeze the app — race it against a timeout.
-function withTimeout(promise, ms=3500){
-  return new Promise((resolve)=>{
-    let done = false;
-    const timer = setTimeout(()=>{ if(!done){ done=true; resolve(null); } }, ms);
-    Promise.resolve(promise).then(v=>{ if(!done){ done=true; clearTimeout(timer); resolve(v); } })
-      .catch(()=>{ if(!done){ done=true; clearTimeout(timer); resolve(null); } });
-  });
-}
-let storageOK = true;
+window.fmt = (n)=> 'Rs. ' + Number(n||0).toLocaleString('en-PK');
+window.custBalance = (id)=> (transactions[id]||[]).reduce((s,t)=> s + (t.goods||0) - (t.paid||0), 0);
 
-async function loadData(){
+/* ---------- AUTH ---------- */
+window.switchAuthTab = function(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.t===tab));
+  document.getElementById('loginForm').classList.toggle('hidden', tab!=='login');
+  document.getElementById('ownerSignupForm').classList.toggle('hidden', tab!=='owner');
+};
+
+async function checkOwnerExists(){
   try{
-    const res = await withTimeout(window.storage.get('khata_customers', false));
-    customers = res ? JSON.parse(res.value) : [];
-  }catch(e){ customers = []; }
+    const q = query(collection(db,'users'), where('role','==','owner'), limit(1));
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }catch(e){ return false; }
+}
+
+(async function initLogin(){
+  const ownerExists = await checkOwnerExists();
+  if(ownerExists) document.getElementById('ownerSignupTab').classList.add('hidden');
+})();
+
+window.doLogin = async function(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display='none';
+  if(!email || !pass){ errEl.textContent='Email aur password dono bharein.'; errEl.style.display='block'; return; }
+  document.getElementById('loginSpinner').classList.remove('hidden');
   try{
-    const res2 = await withTimeout(window.storage.get('khata_transactions', false));
-    transactions = res2 ? JSON.parse(res2.value) : {};
-  }catch(e){ transactions = {}; }
+    await signInWithEmailAndPassword(auth, email, pass);
+  }catch(e){
+    document.getElementById('loginSpinner').classList.add('hidden');
+    errEl.textContent = 'Login fail: email ya password ghalat hai.';
+    errEl.style.display='block';
+  }
+};
+
+window.doOwnerSignup = async function(){
+  const name = document.getElementById('ownerName').value.trim();
+  const email = document.getElementById('ownerEmail').value.trim();
+  const pass = document.getElementById('ownerPassword').value;
+  const errEl = document.getElementById('ownerError');
+  errEl.style.display='none';
+  if(!name || !email || pass.length<6){ errEl.textContent='Naam, email bharein aur password 6+ characters ka ho.'; errEl.style.display='block'; return; }
+  const ownerExists = await checkOwnerExists();
+  if(ownerExists){ errEl.textContent='Owner account pehle se bana hua hai. Login karein.'; errEl.style.display='block'; return; }
+  document.getElementById('loginSpinner').classList.remove('hidden');
   try{
-    const res3 = await withTimeout(window.storage.get('khata_bizname', false));
-    if(res3) document.getElementById('bizName').value = res3.value;
-  }catch(e){}
-}
-function saveCustomers(){
-  withTimeout(window.storage.set('khata_customers', JSON.stringify(customers), false)).then(r=>{
-    if(r===null){ storageOK=false; showToast('⚠️ Data save hone mein masla — dobara try karein'); }
-  }).catch(()=>{});
-}
-function saveTransactions(){
-  withTimeout(window.storage.set('khata_transactions', JSON.stringify(transactions), false)).then(r=>{
-    if(r===null){ storageOK=false; showToast('⚠️ Data save hone mein masla — dobara try karein'); }
-  }).catch(()=>{});
-}
-document.getElementById('bizName').addEventListener('change', (e)=>{
-  withTimeout(window.storage.set('khata_bizname', e.target.value, false)).catch(()=>{});
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db,'users',cred.user.uid), {name, email, role:'owner', active:true, createdAt: serverTimestamp()});
+  }catch(e){
+    document.getElementById('loginSpinner').classList.add('hidden');
+    errEl.textContent = 'Signup fail: ' + (e.message||'').replace('Firebase: ','');
+    errEl.style.display='block';
+  }
+};
+
+window.doLogout = function(){ signOut(auth); };
+
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){
+    currentUser = null;
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('appRoot').classList.add('hidden');
+    document.getElementById('loginSpinner').classList.add('hidden');
+    return;
+  }
+  try{
+    const udoc = await getDoc(doc(db,'users',user.uid));
+    if(!udoc.exists() || udoc.data().active===false){
+      showToast('Ye account disable hai ya nahi milta. Owner se rabta karein.');
+      await signOut(auth);
+      return;
+    }
+    const d = udoc.data();
+    currentUser = {uid:user.uid, name:d.name||d.email, role:d.role, email:d.email};
+    document.getElementById('curUserName').textContent = currentUser.name;
+    document.getElementById('curUserRole').textContent = currentUser.role;
+    document.querySelectorAll('.owner-only').forEach(el=> el.classList.toggle('hidden', currentUser.role!=='owner'));
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('appRoot').classList.remove('hidden');
+    document.getElementById('loginSpinner').classList.add('hidden');
+    startListeners();
+  }catch(e){
+    showToast('Kuch masla hua, dobara try karein.');
+    await signOut(auth);
+  }
 });
 
-function fmt(n){ return 'Rs. ' + Number(n||0).toLocaleString('en-PK'); }
-function todayName(){ return WEEKDAYS[new Date().getDay()]; }
-
-function custBalance(id){
-  const txs = transactions[id] || [];
-  return txs.reduce((s,t)=> s + (t.goods||0) - (t.paid||0), 0);
+/* ---------- REAL-TIME DATA ---------- */
+function startListeners(){
+  onSnapshot(collection(db,'customers'), (snap)=>{
+    customers = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    renderAreaFilter(); renderCustomers();
+    if(currentCustomerId) renderLedger();
+  });
+  onSnapshot(query(collection(db,'transactions'), orderBy('createdAt','desc')), (snap)=>{
+    allTx = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    transactions = {};
+    allTx.forEach(t=>{ (transactions[t.customerId]=transactions[t.customerId]||[]).push(t); });
+    renderCustomers();
+    if(currentCustomerId) renderLedger();
+  });
+  onSnapshot(doc(db,'settings','config'), (d)=>{
+    if(d.exists()){ settings = d.data(); document.getElementById('bizName').value = settings.bizName || 'Apna Khata Book'; }
+  });
+  onSnapshot(doc(db,'schedule','days'), (d)=>{
+    if(d.exists()) daySchedule = d.data();
+    renderCustomers();
+  });
+  onSnapshot(query(collection(db,'users'), where('role','==','worker')), (snap)=>{
+    workers = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    if(document.getElementById('workersOverlay').classList.contains('show')) renderWorkersList();
+  });
 }
 
-function renderAreaFilter(){
+document.getElementById('bizName').addEventListener('change', async (e)=>{
+  if(currentUser.role!=='owner') return;
+  settings.bizName = e.target.value;
+  await setDoc(doc(db,'settings','config'), settings, {merge:true});
+});
+
+/* ---------- CUSTOMERS ---------- */
+window.renderAreaFilter = function(){
   const sel = document.getElementById('filterArea');
   const areas = ['All', ...new Set(customers.map(c=>c.area))];
-  sel.innerHTML = areas.map(a=>`<option value="${a}">${a==='All'?'Sab Area':a}</option>`).join('');
-  const dl = document.getElementById('areaList');
-  dl.innerHTML = [...new Set(customers.map(c=>c.area))].map(a=>`<option value="${a}">`).join('');
-}
+  sel.innerHTML = areas.map(a=>`<option value="${a}">${a==='All'?'Area':a}</option>`).join('');
+  document.getElementById('areaList').innerHTML = [...new Set(customers.map(c=>c.area))].map(a=>`<option value="${a}">`).join('');
+};
 
-function renderCustomers(){
-  document.getElementById('todayPill').textContent = 'Aaj: ' + todayName();
+function areasForDay(day){ return daySchedule[day] || []; }
+function daysForArea(area){ return WEEKDAYS.filter(d => (daySchedule[d]||[]).some(a=>a.toLowerCase()===area.toLowerCase())); }
+
+window.renderCustomers = function(){
   const areaF = document.getElementById('filterArea').value;
   const dayF = document.getElementById('filterDay').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
   let list = customers.filter(c=>{
     if(areaF && areaF!=='All' && c.area!==areaF) return false;
-    if(dayF && dayF!=='All' && !c.days.includes(dayF)) return false;
+    if(dayF && dayF!=='All' && !areasForDay(dayF).some(a=>a.toLowerCase()===c.area.toLowerCase())) return false;
     if(search && !c.name.toLowerCase().includes(search)) return false;
     return true;
   });
   const grid = document.getElementById('customerGrid');
-  if(list.length===0){
-    grid.innerHTML = `<div class="empty-msg">Koi customer nahi mila. Naya customer add karein.</div>`;
-    return;
-  }
+  if(list.length===0){ grid.innerHTML = `<div class="empty-msg">Koi customer nahi mila.</div>`; return; }
   grid.innerHTML = list.map(c=>{
     const bal = custBalance(c.id);
-    return `
-    <div class="ccard" onclick="openLedger('${c.id}')">
-      <div class="ccard-top">
-        <div>
-          <div class="ccard-name">${c.name}</div>
-          <div class="ccard-area">${c.area}</div>
-        </div>
-      </div>
+    const days = daysForArea(c.area);
+    const dayLabel = days.length ? days.map(d=>d.slice(0,3)).join(', ') : 'Schedule set nahi';
+    return `<div class="ccard" onclick="openLedger('${c.id}')">
+      <div class="ccard-name">${c.name}</div>
+      <div class="ccard-area">${c.area}</div>
       <div class="ccard-phone">${c.phone}</div>
-      <div class="ccard-days">${c.days.map(d=>`<span class="day-tag">${d.slice(0,3)}</span>`).join('')}</div>
+      <div class="day-tag">${dayLabel}</div>
       <div class="ccard-balance ${bal>0?'bal-due':'bal-clear'}">${bal>0?fmt(bal)+' baaki':'Clear ✓'}</div>
     </div>`;
   }).join('');
-}
+};
 
-function openAddCustomer(){
-  selectedDaysTemp = [];
-  document.querySelectorAll('#ncDays .day-check').forEach(el=>el.classList.remove('active'));
-  document.getElementById('ncName').value='';
-  document.getElementById('ncPhone').value='';
-  document.getElementById('ncArea').value='';
+window.openAddCustomer = function(){
+  document.getElementById('ncName').value=''; document.getElementById('ncPhone').value=''; document.getElementById('ncArea').value='';
   document.getElementById('addCustOverlay').classList.add('show');
-}
-function closeAddCustomer(){ document.getElementById('addCustOverlay').classList.remove('show'); }
-document.querySelectorAll('#ncDays .day-check').forEach(el=>{
-  el.addEventListener('click', ()=>{
-    const d = el.dataset.d;
-    if(selectedDaysTemp.includes(d)){ selectedDaysTemp = selectedDaysTemp.filter(x=>x!==d); el.classList.remove('active'); }
-    else{ selectedDaysTemp.push(d); el.classList.add('active'); }
-  });
-});
-function submitCustomer(){
+};
+window.closeAddCustomer = function(){ document.getElementById('addCustOverlay').classList.remove('show'); };
+window.submitCustomer = async function(){
   const name = document.getElementById('ncName').value.trim();
   const phone = document.getElementById('ncPhone').value.trim();
   const area = document.getElementById('ncArea').value.trim();
   const errEl = document.getElementById('ncError');
-  if(!name || !phone || !area || selectedDaysTemp.length===0){
-    errEl.style.display='block'; return;
-  }
+  if(!name || !phone || !area){ errEl.style.display='block'; return; }
   errEl.style.display='none';
-  const c = {id:'c'+Date.now(), name, phone, area, days:[...selectedDaysTemp]};
-  customers.push(c);
-  transactions[c.id] = [];
-  renderAreaFilter(); renderCustomers();
-  closeAddCustomer();
-  showToast('Customer add ho gaya!');
-  saveCustomers(); saveTransactions();
-}
+  try{
+    await addDoc(collection(db,'customers'), {
+      name, phone, area, createdBy: currentUser.uid, createdByName: currentUser.name, createdAt: serverTimestamp()
+    });
+    closeAddCustomer();
+    showToast('Customer add ho gaya!');
+  }catch(e){ showToast('Save fail hua: '+e.message); }
+};
 
-function openLedger(id){
+/* ---------- LEDGER ---------- */
+window.openLedger = function(id){
   currentCustomerId = id;
   const c = customers.find(x=>x.id===id);
   document.getElementById('lgName').textContent = c.name;
-  document.getElementById('lgSub').textContent = c.area + ' · ' + c.phone + ' · ' + c.days.map(d=>d.slice(0,3)).join(', ');
-  document.getElementById('txGoods').value='';
-  document.getElementById('txPaid').value='';
-  document.getElementById('txNote').value='';
+  document.getElementById('lgSub').textContent = c.area + ' · ' + c.phone;
+  document.getElementById('txKg').value=''; document.getElementById('txGoods').value='';
+  document.getElementById('txPaid').value=''; document.getElementById('txNote').value='';
   renderLedger();
   document.getElementById('ledgerOverlay').classList.add('show');
-}
-function closeLedger(){ document.getElementById('ledgerOverlay').classList.remove('show'); }
-
-function renderLedger(){
+};
+window.closeLedger = function(){ document.getElementById('ledgerOverlay').classList.remove('show'); };
+window.renderLedger = function(){
   const id = currentCustomerId;
   const bal = custBalance(id);
   const balEl = document.getElementById('lgBalance');
   balEl.textContent = fmt(bal);
   balEl.className = 'amt ' + (bal>0?'bal-due':'bal-clear');
-  const txs = (transactions[id]||[]).slice().reverse();
+  const txs = (transactions[id]||[]).slice();
   const hist = document.getElementById('txHistory');
-  if(txs.length===0){
-    hist.innerHTML = `<div style="text-align:center;color:#8a7c72;padding:20px;font-size:13px;">Koi entry nahi hai abhi.</div>`;
-    return;
-  }
+  if(txs.length===0){ hist.innerHTML = `<div style="text-align:center;color:#8a7c72;padding:16px;font-size:13px;">Koi entry nahi hai.</div>`; return; }
   hist.innerHTML = txs.map(t=>`
     <div class="tx-item">
-      <div>
-        <div>${t.note || 'Entry'}</div>
-        <div class="d">${t.date}</div>
+      <div class="tx-item-top">
+        <div>${t.note || 'Entry'} ${t.kg?('· '+t.kg+' kg'):''}</div>
+        <div class="tx-amts">${t.goods?('+'+fmt(t.goods)):''} ${t.paid?('−'+fmt(t.paid)):''}</div>
       </div>
-      <div class="amts">
-        ${t.goods?('+ '+fmt(t.goods)+' saman'):''}<br>
-        ${t.paid?('− '+fmt(t.paid)+' paid'):''}
-      </div>
-    </div>
-  `).join('');
-}
+      <div class="d">${t.createdByName||''} · ${t.dateStr||''}</div>
+    </div>`).join('');
+};
 
-function addTransaction(){
+window.addTransaction = async function(){
   const id = currentCustomerId;
+  const kg = parseFloat(document.getElementById('txKg').value) || 0;
   const goods = parseFloat(document.getElementById('txGoods').value) || 0;
   const paid = parseFloat(document.getElementById('txPaid').value) || 0;
   const note = document.getElementById('txNote').value.trim();
-  if(goods===0 && paid===0){ showToast('Kam az kam saman ya payment amount likhein.'); return; }
+  if(kg===0 && goods===0 && paid===0){ showToast('Kam az kam ek field bharein.'); return; }
   const prevBal = custBalance(id);
-  const tx = {
-    id:'t'+Date.now(), date:new Date().toLocaleString('en-PK',{dateStyle:'medium',timeStyle:'short'}),
-    goods, paid, note
-  };
-  if(!transactions[id]) transactions[id]=[];
-  transactions[id].push(tx);
-  saveTransactions();
-  const newBal = custBalance(id);
-  renderLedger();
-  renderCustomers();
-  document.getElementById('txGoods').value='';
-  document.getElementById('txPaid').value='';
-  document.getElementById('txNote').value='';
-  showReceipt(id, tx, prevBal, newBal);
-}
+  const dateStr = new Date().toLocaleString('en-PK',{dateStyle:'medium',timeStyle:'short'});
+  try{
+    await addDoc(collection(db,'transactions'), {
+      customerId:id, kg, goods, paid, note, dateStr,
+      createdBy: currentUser.uid, createdByName: currentUser.name, createdAt: serverTimestamp()
+    });
+    const newBal = prevBal + goods - paid;
+    document.getElementById('txKg').value=''; document.getElementById('txGoods').value='';
+    document.getElementById('txPaid').value=''; document.getElementById('txNote').value='';
+    showReceipt(id, {kg,goods,paid,note,date:dateStr}, prevBal, newBal);
+  }catch(e){ showToast('Save fail hua: '+e.message); }
+};
 
-function showReceipt(custId, tx, prevBal, newBal){
+window.showReceipt = function(custId, tx, prevBal, newBal){
   const c = customers.find(x=>x.id===custId);
-  const biz = document.getElementById('bizName').value;
+  const biz = settings.bizName || 'Apna Khata Book';
   document.getElementById('receiptContent').innerHTML = `
-    <div class="receipt-top">
-      <div class="biz">${biz}</div>
-      <div class="receipt-meta">${tx.date}</div>
-    </div>
+    <div class="receipt-top"><div class="biz">${biz}</div><div class="receipt-meta">${tx.date}</div></div>
     <div class="receipt-row"><span>Customer</span><span>${c.name}</span></div>
     <div class="receipt-row"><span>Mobile</span><span>${c.phone}</span></div>
     <div class="receipt-row"><span>Area</span><span>${c.area}</span></div>
+    ${tx.kg?`<div class="receipt-row"><span>Saman (KG)</span><span>${tx.kg} kg</span></div>`:''}
     ${tx.note?`<div class="receipt-row"><span>Tafseel</span><span>${tx.note}</span></div>`:''}
     <div class="receipt-row"><span>Pichla Baaki</span><span>${fmt(prevBal)}</span></div>
-    <div class="receipt-row"><span>Saman Diya</span><span>+ ${fmt(tx.goods)}</span></div>
+    <div class="receipt-row"><span>Bill Amount</span><span>+ ${fmt(tx.goods)}</span></div>
     <div class="receipt-row"><span>Payment Wasool</span><span>− ${fmt(tx.paid)}</span></div>
     <div class="receipt-row total"><span>Naya Baaki</span><span>${fmt(newBal)}</span></div>
-    <div class="receipt-foot">Shukriya! — ${biz}</div>
+    <div class="receipt-foot">Shukriya! — ${biz} (${currentUser.name})</div>
   `;
-  const smsText = `${biz}\nAssalam-o-Alaikum ${c.name},\nAaj saman: ${fmt(tx.goods)}\nPayment wasool: ${fmt(tx.paid)}\nPichla baaki: ${fmt(prevBal)}\nNaya baaki: ${fmt(newBal)}\nShukriya!`;
-  window._lastSmsText = smsText;
-  const phoneClean = c.phone.replace(/[^0-9+]/g,'');
-  document.getElementById('smsLink').href = `sms:${phoneClean}?body=${encodeURIComponent(smsText)}`;
+  const custText = `${biz}\nAssalam-o-Alaikum ${c.name},\n${tx.kg?('Saman: '+tx.kg+' kg\n'):''}Bill: ${fmt(tx.goods)}\nAapne pay kiya: ${fmt(tx.paid)}\nAapka remaining baaki: ${fmt(newBal)}\nShukriya!`;
+  const ownerText = `${biz} — Payment Update\nWorker: ${currentUser.name}\nCustomer: ${c.name} (${c.phone})\nArea: ${c.area}\n${tx.kg?('Saman: '+tx.kg+' kg\n'):''}Bill: ${fmt(tx.goods)}\nWasool hua: ${fmt(tx.paid)}\nCustomer ka baaki: ${fmt(newBal)}`;
+  const custPhoneClean = (c.phone||'').replace(/[^0-9+]/g,'');
+  const ownerPhoneClean = (settings.ownerPhone||'').replace(/[^0-9+]/g,'');
+  document.getElementById('smsCustLink').href = `sms:${custPhoneClean}?body=${encodeURIComponent(custText)}`;
+  const ownerLink = document.getElementById('smsOwnerLink');
+  if(ownerPhoneClean){ ownerLink.href = `sms:${ownerPhoneClean}?body=${encodeURIComponent(ownerText)}`; }
+  else{ ownerLink.href='#'; ownerLink.onclick=(e)=>{e.preventDefault(); showToast('Owner ka number Settings mein set nahi hai.');}; }
   document.getElementById('receiptOverlay').classList.add('show');
-}
-function closeReceipt(){ document.getElementById('receiptOverlay').classList.remove('show'); }
-function copySms(){
-  navigator.clipboard.writeText(window._lastSmsText || '').then(()=>showToast('Message copy ho gaya!'));
-}
+};
+window.closeReceipt = function(){ document.getElementById('receiptOverlay').classList.remove('show'); };
 
-function deleteCustomerConfirm(){
-  if(!currentCustomerId) return;
+window.deleteCustomerConfirm = async function(){
+  if(currentUser.role!=='owner') return;
   const c = customers.find(x=>x.id===currentCustomerId);
-  if(!confirm(`Kya aap "${c.name}" ko delete karna chahte hain? Poori history mit jayegi.`)) return;
-  customers = customers.filter(x=>x.id!==currentCustomerId);
-  delete transactions[currentCustomerId];
-  renderAreaFilter(); renderCustomers();
-  closeLedger();
-  showToast('Customer delete ho gaya.');
-  saveCustomers(); saveTransactions();
-}
+  if(!confirm(`"${c.name}" ko delete karein?`)) return;
+  try{
+    await deleteDoc(doc(db,'customers',currentCustomerId));
+    closeLedger();
+    showToast('Customer delete ho gaya.');
+  }catch(e){ showToast('Delete fail hua.'); }
+};
 
-function openTodayRoute(){
-  const today = todayName();
-  document.getElementById('routeTitle').textContent = 'Route — ' + today;
-  const todays = customers.filter(c=>c.days.includes(today));
-  const byArea = {};
-  todays.forEach(c=>{ (byArea[c.area] = byArea[c.area]||[]).push(c); });
-  const areas = Object.keys(byArea);
-  const content = document.getElementById('routeContent');
-  if(areas.length===0){
-    content.innerHTML = `<div class="empty-msg">Aaj (${today}) ke liye koi customer schedule nahi hai.</div>`;
-  } else {
-    content.innerHTML = areas.map(area=>`
-      <h3 style="font-size:13.5px;color:var(--gold-deep);text-transform:uppercase;margin:16px 0 8px;">${area}</h3>
-      ${byArea[area].map(c=>{
-        const bal = custBalance(c.id);
-        return `<div class="tx-item" style="cursor:pointer;" onclick="closeTodayRoute();openLedger('${c.id}')">
-          <div>${c.name} <span style="color:#8a7c72;font-size:11px;">(${c.phone})</span></div>
-          <div class="amts ${bal>0?'bal-due':'bal-clear'}">${bal>0?fmt(bal):'Clear ✓'}</div>
-        </div>`;
-      }).join('')}
-    `).join('');
-  }
+/* ---------- SETTINGS ---------- */
+window.openSettings = function(){
+  document.getElementById('setBizName').value = settings.bizName || '';
+  document.getElementById('setOwnerPhone').value = settings.ownerPhone || '';
+  document.getElementById('settingsOverlay').classList.add('show');
+};
+window.closeSettings = function(){ document.getElementById('settingsOverlay').classList.remove('show'); };
+window.saveSettings = async function(){
+  settings.bizName = document.getElementById('setBizName').value.trim() || 'Apna Khata Book';
+  settings.ownerPhone = document.getElementById('setOwnerPhone').value.trim();
+  await setDoc(doc(db,'settings','config'), settings, {merge:true});
+  closeSettings();
+  showToast('Settings save ho gayi!');
+};
+
+/* ---------- SCHEDULE ---------- */
+window.openSchedule = function(){
+  const fields = document.getElementById('scheduleFields');
+  fields.innerHTML = `<table class="sched-table">` + WEEKDAYS.map(d => `
+    <tr><td class="day-col">${d}</td>
+    <td class="area-col"><input type="text" id="sched_${d}" placeholder="Area likhein" value="${(daySchedule[d]||[]).join(', ')}"></td></tr>
+  `).join('') + `</table>`;
+  document.getElementById('scheduleOverlay').classList.add('show');
+};
+window.closeSchedule = function(){ document.getElementById('scheduleOverlay').classList.remove('show'); };
+window.saveSchedule = async function(){
+  const updated = {};
+  WEEKDAYS.forEach(d=>{
+    const val = document.getElementById('sched_'+d).value.trim();
+    updated[d] = val ? val.split(',').map(a=>a.trim()).filter(Boolean) : [];
+  });
+  await setDoc(doc(db,'schedule','days'), updated);
+  closeSchedule();
+  showToast('Schedule save ho gaya!');
+};
+
+/* ---------- ROUTES ---------- */
+window.openRoutes = function(){
+  activeRouteTab = 'Monday';
+  document.getElementById('routeTabs').innerHTML = WEEKDAYS.map(d=>
+    `<div class="route-tab ${d===activeRouteTab?'active':''}" data-d="${d}" onclick="switchRouteTab('${d}')">${d.slice(0,3)}</div>`
+  ).join('');
+  renderRouteContent();
   document.getElementById('routeOverlay').classList.add('show');
+};
+window.switchRouteTab = function(d){
+  activeRouteTab = d;
+  document.querySelectorAll('.route-tab').forEach(t=>t.classList.toggle('active', t.dataset.d===d));
+  renderRouteContent();
+};
+function renderRouteContent(){
+  const day = activeRouteTab;
+  const areas = areasForDay(day);
+  const content = document.getElementById('routeContent');
+  if(areas.length===0){ content.innerHTML = `<div class="note-box">Is din ke liye Area set nahi hai.</div>`; return; }
+  const banner = `<div class="note-box" style="background:var(--cream);border-color:var(--brick);color:var(--brick-deep);font-weight:600;">📍 ${day} ka Route: ${areas.join(', ')}</div>`;
+  let body = '';
+  areas.forEach(area=>{
+    const list = customers.filter(c=>c.area.toLowerCase()===area.toLowerCase());
+    body += `<div class="route-area-title">${area}</div>`;
+    if(list.length===0){ body += `<div style="font-size:12.5px;color:#8a7c72;padding:6px 0;">Koi customer nahi.</div>`; }
+    else{
+      body += list.map(c=>{
+        const bal = custBalance(c.id);
+        return `<div class="tx-item" style="cursor:pointer;" onclick="closeRoutes();openLedger('${c.id}')">
+          <div class="tx-item-top"><div>${c.name} <span style="color:#8a7c72;font-size:11px;">(${c.phone})</span></div>
+          <div class="tx-amts ${bal>0?'bal-due':'bal-clear'}">${bal>0?fmt(bal):'Clear ✓'}</div></div>
+        </div>`;
+      }).join('');
+    }
+  });
+  content.innerHTML = banner + body;
 }
-function closeTodayRoute(){ document.getElementById('routeOverlay').classList.remove('show'); }
+window.closeRoutes = function(){ document.getElementById('routeOverlay').classList.remove('show'); };
 
+/* ---------- WORKERS (Owner only) ---------- */
+window.openWorkers = function(){ renderWorkersList(); document.getElementById('workersOverlay').classList.add('show'); };
+window.closeWorkers = function(){ document.getElementById('workersOverlay').classList.remove('show'); };
+window.renderWorkersList = function(){
+  const el = document.getElementById('workersList');
+  if(workers.length===0){ el.innerHTML = `<div style="text-align:center;color:#8a7c72;padding:16px;font-size:13px;">Abhi koi worker nahi hai.</div>`; return; }
+  el.innerHTML = workers.map(w=>`
+    <div class="worker-row">
+      <div class="worker-info"><div class="n">${w.name}</div><div class="e">${w.email}</div></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="status-pill ${w.active!==false?'status-active':'status-disabled'}">${w.active!==false?'Active':'Disabled'}</span>
+        <button class="btn btn-ghost" style="padding:6px 10px;font-size:11px;" onclick="toggleWorker('${w.id}', ${w.active===false})">${w.active!==false?'Disable':'Enable'}</button>
+      </div>
+    </div>
+  `).join('');
+};
+window.addWorker = async function(){
+  const name = document.getElementById('wkName').value.trim();
+  const email = document.getElementById('wkEmail').value.trim();
+  const pass = document.getElementById('wkPassword').value;
+  const errEl = document.getElementById('wkError');
+  errEl.style.display='none';
+  if(!name || !email || pass.length<6){ errEl.textContent='Naam, email bharein, password 6+ characters ka ho.'; errEl.style.display='block'; return; }
+  try{
+    const { initializeApp: initApp2 } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    const secApp = initApp2(firebaseConfig, 'Secondary'+Date.now());
+    const secAuth = getAuth(secApp);
+    const cred = await createUserWithEmailAndPassword(secAuth, email, pass);
+    await setDoc(doc(db,'users',cred.user.uid), {name, email, role:'worker', active:true, createdBy:currentUser.uid, createdAt: serverTimestamp()});
+    await signOut(secAuth);
+    document.getElementById('wkName').value=''; document.getElementById('wkEmail').value=''; document.getElementById('wkPassword').value='';
+    showToast('Worker add ho gaya!');
+  }catch(e){ errEl.textContent = 'Fail: ' + (e.message||'').replace('Firebase: ',''); errEl.style.display='block'; }
+};
+window.toggleWorker = async function(uid, makeActive){
+  await updateDoc(doc(db,'users',uid), {active: makeActive});
+  showToast(makeActive ? 'Worker enable kar diya.' : 'Worker disable kar diya.');
+};
+
+/* ---------- ACTIVITY LOG (Owner only) ---------- */
+window.openActivity = function(){
+  const sel = document.getElementById('activityFilter');
+  const names = ['All', ...new Set(allTx.map(t=>t.createdByName).filter(Boolean))];
+  sel.innerHTML = names.map(n=>`<option value="${n}">${n==='All'?'Sab Workers':n}</option>`).join('');
+  renderActivity();
+  document.getElementById('activityOverlay').classList.add('show');
+};
+window.closeActivity = function(){ document.getElementById('activityOverlay').classList.remove('show'); };
+window.renderActivity = function(){
+  const filter = document.getElementById('activityFilter').value;
+  let list = allTx.slice();
+  if(filter!=='All') list = list.filter(t=>t.createdByName===filter);
+  const el = document.getElementById('activityList');
+  if(list.length===0){ el.innerHTML = `<div style="text-align:center;color:#8a7c72;padding:16px;font-size:13px;">Koi activity nahi hai.</div>`; return; }
+  el.innerHTML = list.map(t=>{
+    const c = customers.find(x=>x.id===t.customerId);
+    return `<div class="tx-item">
+      <div class="tx-item-top">
+        <div><b>${t.createdByName||'—'}</b> → ${c?c.name:'(deleted customer)'} ${t.kg?('· '+t.kg+' kg'):''}</div>
+        <div class="tx-amts">${t.goods?('+'+fmt(t.goods)):''} ${t.paid?('−'+fmt(t.paid)):''}</div>
+      </div>
+      <div class="d">${t.dateStr||''} ${t.note?(' · '+t.note):''}</div>
+    </div>`;
+  }).join('');
+};
+
+/* ---------- MISC ---------- */
 let toastTimer;
-function showToast(msg){
+window.showToast = function(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
-}
-
-(async function init(){
-  // Render immediately with empty state so the page never looks blank/stuck.
-  renderAreaFilter();
-  renderCustomers();
-  // Then try to load saved data in the background (with timeout safety).
-  await loadData();
-  renderAreaFilter();
-  renderCustomers();
-})();
-
-// Catch any unexpected error so the app never silently freezes.
-window.addEventListener('error', function(e){
-  console.error('App error:', e.message);
-});
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
+};
+document.getElementById('searchBox').addEventListener('input', ()=>window.renderCustomers());
+document.getElementById('searchBox').addEventListener('keyup', ()=>window.renderCustomers());
 </script>
 </body>
 </html>
