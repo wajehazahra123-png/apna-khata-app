@@ -118,6 +118,8 @@
 
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--brick-deep);color:var(--paper);padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;z-index:100;box-shadow:0 10px 26px rgba(0,0,0,0.25);opacity:0;pointer-events:none;transition:opacity .25s ease;max-width:90vw;text-align:center;}
   .toast.show{opacity:1;}
+  .offline-banner{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--red);color:#fff;text-align:center;padding:8px 12px;font-size:12.5px;font-weight:600;display:none;}
+  .offline-banner.show{display:block;}
   .spinner{border:3px solid var(--line);border-top:3px solid var(--brick);border-radius:50%;width:24px;height:24px;animation:spin 0.8s linear infinite;margin:20px auto;}
   @keyframes spin{to{transform:rotate(360deg);}}
 
@@ -134,6 +136,8 @@
 </style>
 </head>
 <body>
+
+<div class="offline-banner" id="offlineBanner">📴 Internet nahi hai — jo entries ab add karengi, wo internet wapas aate hi khud save ho jayengi.</div>
 
 <!-- LOGIN SCREEN -->
 <div id="loginScreen">
@@ -348,7 +352,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc,
-  updateDoc, deleteDoc, query, where, orderBy, onSnapshot, serverTimestamp, limit
+  updateDoc, deleteDoc, query, where, orderBy, onSnapshot, serverTimestamp, limit,
+  enableIndexedDbPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -364,6 +369,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// Enable offline mode: caches data locally and auto-syncs any changes once internet returns.
+enableIndexedDbPersistence(db).catch((err)=>{
+  if(err.code === 'failed-precondition'){
+    console.warn('Offline persistence: app khuli hai kai tabs mein, sirf 1 tab mein offline mode kaam karega.');
+  } else if(err.code === 'unimplemented'){
+    console.warn('Ye browser offline mode support nahi karta.');
+  }
+});
+
+function updateOfflineBanner(){
+  const banner = document.getElementById('offlineBanner');
+  if(navigator.onLine){ banner.classList.remove('show'); }
+  else{ banner.classList.add('show'); }
+}
+window.addEventListener('online', ()=>{ updateOfflineBanner(); showToast('✅ Internet wapas aa gaya — data sync ho raha hai.'); });
+window.addEventListener('offline', ()=>{ updateOfflineBanner(); showToast('📴 Internet nahi hai — offline mode chalu.'); });
+updateOfflineBanner();
 
 const WEEKDAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 let customers = [];
