@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Khata Book</title>
+<meta name="theme-color" content="#7A3B2E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -369,6 +370,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// Register service worker: caches the app itself so it can OPEN even with zero internet
+// (once it has successfully loaded online at least one time on this device).
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch((err)=>{
+      console.warn('Service worker register fail:', err);
+    });
+  });
+}
 
 // Enable offline mode: caches data locally and auto-syncs any changes once internet returns.
 enableIndexedDbPersistence(db).catch((err)=>{
@@ -771,6 +782,7 @@ window.addWorker = async function(){
   errEl.style.display='none';
   if(!name || !email || pass.length<6){ errEl.textContent='Naam, email bharein, password 6+ characters ka ho.'; errEl.style.display='block'; return; }
   try{
+    // Use a secondary app instance so creating the worker doesn't log the owner out.
     const { initializeApp: initApp2 } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
     const secApp = initApp2(firebaseConfig, 'Secondary'+Date.now());
     const secAuth = getAuth(secApp);
