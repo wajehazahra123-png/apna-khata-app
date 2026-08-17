@@ -20,7 +20,6 @@
   .mono{font-family:'JetBrains Mono',monospace;}
   .hidden{display:none !important;}
 
-  /* Login screen */
   #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
   .login-box{background:var(--paper);border-radius:16px;max-width:380px;width:100%;padding:28px;box-shadow:var(--shadow);}
   .login-box h1{color:var(--brick-deep);font-size:24px;margin:0 0 4px;text-align:center;}
@@ -140,7 +139,6 @@
 
 <div class="offline-banner" id="offlineBanner">📴 Internet nahi hai — jo entries ab add karengi, wo internet wapas aate hi khud save ho jayengi.</div>
 
-<!-- LOGIN SCREEN -->
 <div id="loginScreen">
   <div class="login-box">
     <h1>Apna Khata Book</h1>
@@ -169,7 +167,6 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="appRoot" class="hidden">
 <header>
   <div class="brand">
@@ -209,7 +206,6 @@
 </main>
 </div>
 
-<!-- Settings Modal -->
 <div class="modal-overlay" id="settingsOverlay">
   <div class="modal">
     <h2>Settings</h2>
@@ -223,7 +219,6 @@
   </div>
 </div>
 
-<!-- Day-Area Schedule Modal -->
 <div class="modal-overlay" id="scheduleOverlay">
   <div class="modal">
     <h2>Din ka Area Schedule</h2>
@@ -236,7 +231,6 @@
   </div>
 </div>
 
-<!-- Workers Modal -->
 <div class="modal-overlay" id="workersOverlay">
   <div class="modal">
     <h2>Workers Manage Karein</h2>
@@ -254,7 +248,6 @@
   </div>
 </div>
 
-<!-- Activity Log Modal -->
 <div class="modal-overlay" id="activityOverlay">
   <div class="modal">
     <h2>Activity Log</h2>
@@ -269,7 +262,6 @@
   </div>
 </div>
 
-<!-- Add Customer Modal -->
 <div class="modal-overlay" id="addCustOverlay">
   <div class="modal">
     <h2>Naya Customer Add Karein</h2>
@@ -284,7 +276,6 @@
   </div>
 </div>
 
-<!-- Ledger Modal -->
 <div class="modal-overlay" id="ledgerOverlay">
   <div class="modal">
     <div class="ledger-head">
@@ -315,7 +306,6 @@
   </div>
 </div>
 
-<!-- Receipt Modal -->
 <div class="modal-overlay" id="receiptOverlay">
   <div class="modal">
     <div id="printArea"><div class="receipt" id="receiptContent"></div></div>
@@ -331,7 +321,6 @@
   </div>
 </div>
 
-<!-- Routes Modal -->
 <div class="modal-overlay" id="routeOverlay">
   <div class="modal">
     <h2>7 Din Ka Route Schedule</h2>
@@ -371,8 +360,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Register service worker: caches the app itself so it can OPEN even with zero internet
-// (once it has successfully loaded online at least one time on this device).
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('sw.js').catch((err)=>{
@@ -381,7 +368,6 @@ if('serviceWorker' in navigator){
   });
 }
 
-// Enable offline mode: caches data locally and auto-syncs any changes once internet returns.
 enableIndexedDbPersistence(db).catch((err)=>{
   if(err.code === 'failed-precondition'){
     console.warn('Offline persistence: app khuli hai kai tabs mein, sirf 1 tab mein offline mode kaam karega.');
@@ -401,19 +387,18 @@ updateOfflineBanner();
 
 const WEEKDAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 let customers = [];
-let transactions = {}; // customerId -> [tx]
-let allTx = []; // flat list for activity log
+let transactions = {};
+let allTx = [];
 let settings = {bizName:'Apna Khata Book', ownerPhone:''};
 let daySchedule = {Monday:[],Tuesday:[],Wednesday:[],Thursday:[],Friday:[],Saturday:[],Sunday:[]};
 let workers = [];
 let currentCustomerId = null;
 let activeRouteTab = 'Monday';
-let currentUser = null; // {uid, name, role, email}
+let currentUser = null;
 
 window.fmt = (n)=> 'Rs. ' + Number(n||0).toLocaleString('en-PK');
 window.custBalance = (id)=> (transactions[id]||[]).reduce((s,t)=> s + (t.goods||0) - (t.paid||0), 0);
 
-/* ---------- AUTH ---------- */
 window.switchAuthTab = function(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.t===tab));
   document.getElementById('loginForm').classList.toggle('hidden', tab!=='login');
@@ -439,12 +424,21 @@ window.doLogin = async function(){
   const errEl = document.getElementById('loginError');
   errEl.style.display='none';
   if(!email || !pass){ errEl.textContent='Email aur password dono bharein.'; errEl.style.display='block'; return; }
+  if(!navigator.onLine){
+    errEl.textContent = '📴 Internet nahi hai — naya login sirf internet ke sath ho sakta hai. Agar pehle se logged-in thin, app khud khul jani chahiye thi.';
+    errEl.style.display='block';
+    return;
+  }
   document.getElementById('loginSpinner').classList.remove('hidden');
   try{
     await signInWithEmailAndPassword(auth, email, pass);
   }catch(e){
     document.getElementById('loginSpinner').classList.add('hidden');
-    errEl.textContent = 'Login fail: email ya password ghalat hai.';
+    if(e.code === 'auth/network-request-failed'){
+      errEl.textContent = '📴 Internet ka masla hai — connection check karein.';
+    } else {
+      errEl.textContent = 'Login fail: email ya password ghalat hai.';
+    }
     errEl.style.display='block';
   }
 };
@@ -488,20 +482,35 @@ onAuthStateChanged(auth, async (user)=>{
     }
     const d = udoc.data();
     currentUser = {uid:user.uid, name:d.name||d.email, role:d.role, email:d.email};
-    document.getElementById('curUserName').textContent = currentUser.name;
-    document.getElementById('curUserRole').textContent = currentUser.role;
-    document.querySelectorAll('.owner-only').forEach(el=> el.classList.toggle('hidden', currentUser.role!=='owner'));
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('appRoot').classList.remove('hidden');
-    document.getElementById('loginSpinner').classList.add('hidden');
-    startListeners();
+    try{ localStorage.setItem('khata_lastUser', JSON.stringify(currentUser)); }catch(e){}
+    showApp();
   }catch(e){
-    showToast('Kuch masla hua, dobara try karein.');
-    await signOut(auth);
+    let cached = null;
+    try{ cached = JSON.parse(localStorage.getItem('khata_lastUser')||'null'); }catch(err){}
+    if(cached && cached.uid === user.uid){
+      currentUser = cached;
+      showApp();
+      showToast('📴 Offline — pichla saved data dikha rahe hain.');
+    } else if(!navigator.onLine){
+      showToast('📴 Internet nahi hai aur ye pehla login hai is device par — internet ke sath ek dafa login karein.');
+      document.getElementById('loginSpinner').classList.add('hidden');
+    } else {
+      showToast('Kuch masla hua, dobara try karein.');
+      await signOut(auth);
+    }
   }
 });
 
-/* ---------- REAL-TIME DATA ---------- */
+function showApp(){
+  document.getElementById('curUserName').textContent = currentUser.name;
+  document.getElementById('curUserRole').textContent = currentUser.role;
+  document.querySelectorAll('.owner-only').forEach(el=> el.classList.toggle('hidden', currentUser.role!=='owner'));
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appRoot').classList.remove('hidden');
+  document.getElementById('loginSpinner').classList.add('hidden');
+  startListeners();
+}
+
 function startListeners(){
   onSnapshot(collection(db,'customers'), (snap)=>{
     customers = snap.docs.map(d=>({id:d.id, ...d.data()}));
@@ -534,7 +543,6 @@ document.getElementById('bizName').addEventListener('change', async (e)=>{
   await setDoc(doc(db,'settings','config'), settings, {merge:true});
 });
 
-/* ---------- CUSTOMERS ---------- */
 window.renderAreaFilter = function(){
   const sel = document.getElementById('filterArea');
   const areas = ['All', ...new Set(customers.map(c=>c.area))];
@@ -592,7 +600,6 @@ window.submitCustomer = async function(){
   }catch(e){ showToast('Save fail hua: '+e.message); }
 };
 
-/* ---------- LEDGER ---------- */
 window.openLedger = function(id){
   currentCustomerId = id;
   const c = customers.find(x=>x.id===id);
@@ -683,7 +690,6 @@ window.deleteCustomerConfirm = async function(){
   }catch(e){ showToast('Delete fail hua.'); }
 };
 
-/* ---------- SETTINGS ---------- */
 window.openSettings = function(){
   document.getElementById('setBizName').value = settings.bizName || '';
   document.getElementById('setOwnerPhone').value = settings.ownerPhone || '';
@@ -698,7 +704,6 @@ window.saveSettings = async function(){
   showToast('Settings save ho gayi!');
 };
 
-/* ---------- SCHEDULE ---------- */
 window.openSchedule = function(){
   const fields = document.getElementById('scheduleFields');
   fields.innerHTML = `<table class="sched-table">` + WEEKDAYS.map(d => `
@@ -719,7 +724,6 @@ window.saveSchedule = async function(){
   showToast('Schedule save ho gaya!');
 };
 
-/* ---------- ROUTES ---------- */
 window.openRoutes = function(){
   activeRouteTab = 'Monday';
   document.getElementById('routeTabs').innerHTML = WEEKDAYS.map(d=>
@@ -758,7 +762,6 @@ function renderRouteContent(){
 }
 window.closeRoutes = function(){ document.getElementById('routeOverlay').classList.remove('show'); };
 
-/* ---------- WORKERS (Owner only) ---------- */
 window.openWorkers = function(){ renderWorkersList(); document.getElementById('workersOverlay').classList.add('show'); };
 window.closeWorkers = function(){ document.getElementById('workersOverlay').classList.remove('show'); };
 window.renderWorkersList = function(){
@@ -782,7 +785,6 @@ window.addWorker = async function(){
   errEl.style.display='none';
   if(!name || !email || pass.length<6){ errEl.textContent='Naam, email bharein, password 6+ characters ka ho.'; errEl.style.display='block'; return; }
   try{
-    // Use a secondary app instance so creating the worker doesn't log the owner out.
     const { initializeApp: initApp2 } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
     const secApp = initApp2(firebaseConfig, 'Secondary'+Date.now());
     const secAuth = getAuth(secApp);
@@ -798,7 +800,6 @@ window.toggleWorker = async function(uid, makeActive){
   showToast(makeActive ? 'Worker enable kar diya.' : 'Worker disable kar diya.');
 };
 
-/* ---------- ACTIVITY LOG (Owner only) ---------- */
 window.openActivity = function(){
   const sel = document.getElementById('activityFilter');
   const names = ['All', ...new Set(allTx.map(t=>t.createdByName).filter(Boolean))];
@@ -825,7 +826,6 @@ window.renderActivity = function(){
   }).join('');
 };
 
-/* ---------- MISC ---------- */
 let toastTimer;
 window.showToast = function(msg){
   const t = document.getElementById('toast');
